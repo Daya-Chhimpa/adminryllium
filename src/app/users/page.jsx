@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { adminListUsersThunk } from "@/store/slices/adminSlice";
 import Link from "next/link";
 
-export default function AdminUsersPage() {
+export default function UsersPage() {
   const dispatch = useDispatch();
   const status = useSelector((s) => s.admin.status);
   const error = useSelector((s) => s.admin.error);
@@ -17,7 +17,6 @@ export default function AdminUsersPage() {
   const [search, setSearch] = useState("");
   const [searchInput, setSearchInput] = useState("");
 
-  // Debounce search input
   useEffect(() => {
     const t = setTimeout(() => setSearch(searchInput.trim()), 400);
     return () => clearTimeout(t);
@@ -38,7 +37,7 @@ export default function AdminUsersPage() {
 
   const canNext = useMemo(() => {
     if (pagination?.totalPages != null && pagination?.page != null) return pagination.page < pagination.totalPages;
-    return (users?.length || 0) === limit; // naive fallback
+    return (users?.length || 0) === limit;
   }, [pagination, users, limit]);
 
   return (
@@ -86,7 +85,7 @@ export default function AdminUsersPage() {
                 };
                 return (
                   <tr key={u.id}>
-                    <td><Link href={{ pathname: "/admin/users/view", query: { id: u.id } }}>{u.id}</Link></td>
+                    <td><Link href={{ pathname: "/users/view", query: { id: u.id } }}>{u.id}</Link></td>
                     <td>{u.firstName || '-'}</td>
                     <td>{u.lastName || '-'}</td>
                     <td>{u.email}</td>

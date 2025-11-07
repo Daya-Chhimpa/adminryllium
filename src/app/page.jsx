@@ -12,10 +12,10 @@ export default function Home() {
         document.cookie = `admin_auth=1; path=/; max-age=${60 * 60 * 24 * 7}`;
         router.replace("/admin");
       } else {
-        router.replace("/auth/admin/signin");
+        router.replace("/signin");
       }
     } catch {
-      router.replace("/auth/admin/signin");
+      router.replace("/signin");
     }
   }, [router]);
   return null;
