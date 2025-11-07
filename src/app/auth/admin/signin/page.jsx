@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { adminLoginThunk } from "@/store/slices/adminSlice";
 
@@ -11,6 +11,18 @@ function AdminSignInContent() {
   const dispatch = useDispatch();
   const status = useSelector((s) => s.admin.status);
   const error = useSelector((s) => s.admin.error);
+
+  useEffect(() => {
+    try {
+      const hasCookie = document.cookie.split("; ").some((c) => c.startsWith("admin_auth=1"));
+      const token = typeof window !== "undefined" ? window.localStorage.getItem("adminAuthToken") : "";
+      if (hasCookie && token) {
+        const params = new URLSearchParams(typeof window !== "undefined" ? window.location.search : "");
+        const next = params.get("next");
+        router.replace(next || "/admin");
+      }
+    } catch {}
+  }, [router]);
 
   async function handleSubmit(e) {
     e.preventDefault();

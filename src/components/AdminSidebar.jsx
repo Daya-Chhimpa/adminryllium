@@ -8,7 +8,7 @@ import { FaTachometerAlt, FaUsers, FaSignOutAlt } from "react-icons/fa";
 
 const NAV = [
   { href: "/admin", label: "Dashboard", icon: FaTachometerAlt },
-  { href: "/admin/users", label: "Users", icon: FaUsers },
+  { href: "/users", label: "Users", icon: FaUsers },
 ];
 
 export default function AdminSidebar({ drawerOpen = false, onClose }) {
@@ -18,7 +18,7 @@ export default function AdminSidebar({ drawerOpen = false, onClose }) {
 
   function handleLogout() {
     dispatch(adminLogout());
-    router.push("/auth/admin/signin");
+    router.push("/signin");
   }
 
   return (

@@ -1,16 +1,36 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // ✅ Export static HTML for Apache/NGINX hosting
   output: 'export',
-  // Use a custom build dir to avoid Windows locks on .next\trace
-  distDir: '.next-build',
-  // Avoid creating/accessing trace dir on Windows (prevents EPERM lstat errors)
+
+  // ✅ Folder name where build output will go
+  distDir: 'build',
+
+  // ✅ Base path matches your domain/subpath
+  // Your admin runs at: http://admin.rayllium.com  (subdomain)
+  // OR inside main domain path like http://rayllium.com/admin
+  // Use only ONE of these (depends on your hosting setup):
+
+  // ⚙️ If using subdomain (admin.rayllium.com)
+  basePath: '',
+  assetPrefix: '',
+
+  // ⚙️ If using subfolder (rayllium.com/admin)
+  // basePath: '/rayllium/admin',
+  // assetPrefix: '/rayllium/admin/',
+
+  // ✅ Avoid Next.js trace errors on servers
   outputFileTracing: false,
-  // Speed up builds and avoid blocking on lint/types in CI-like environments
+
+  // ✅ Skip lint/type errors during build
   eslint: { ignoreDuringBuilds: true },
   typescript: { ignoreBuildErrors: true },
-  images: {
-    unoptimized: true,
-  },
+
+  // ✅ Disable image optimization for static export
+  images: { unoptimized: true },
+
+  // ✅ Important for correct routing in static hosting
+  trailingSlash: true,
 };
 
 export default nextConfig;

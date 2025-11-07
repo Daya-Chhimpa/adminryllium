@@ -1,8 +1,9 @@
 import UserDetailClient from "@/app/admin/users/UserDetailClient";
 
-export default function AdminUserDetailQueryPage() {
+export default function UserDetailQueryPage() {
   return <UserDetailClient />;
 }
 
 export const dynamic = "force-static";
+
 
