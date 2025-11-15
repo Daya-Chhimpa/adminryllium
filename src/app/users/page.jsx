@@ -53,13 +53,13 @@ export default function UsersPage() {
               <option value={50}>50</option>
             </select>
           </div>
-          <div style={{fontSize:12,color:'#a0aec0'}}>
+          <div style={{fontSize:12,color:'#718096'}}>
             Page {pagination?.page ?? page}{pagination?.totalPages ? ` of ${pagination.totalPages}` : ""}
           </div>
         </div>
 
         {status === "loading" && <p>Loading users...</p>}
-        {error && <p style={{color:'#dc2626'}}>{error}</p>}
+        {error && <p style={{color:'#e53e3e'}}>{error}</p>}
         <div style={{overflowX:'auto'}}>
           <table className="rl-table">
             <thead>
@@ -100,7 +100,7 @@ export default function UsersPage() {
         </div>
 
         <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginTop:12,flexWrap:'wrap',gap:8}}>
-          <div style={{fontSize:12,color:'#a0aec0'}}>
+          <div style={{fontSize:12,color:'#718096'}}>
             Showing {users?.length || 0} items
           </div>
           <div style={{display:'flex',gap:8}}>
