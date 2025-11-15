@@ -42,7 +42,7 @@ function AdminSignInContent() {
       <link rel="stylesheet" href="/custom-style.css" />
       <div className="auth-wrap">
         <div className="auth-side">
-          <div className="auth-brand"><span className="logo">NB</span><div className="Tag">Nexbric</div></div>
+          <div className="auth-brand"><span className="logo">A</span><div className="Tag">Alpacross</div></div>
           <div className="auth-title">Admin Sign in</div>
           <p className="auth-sub">Admin access for platform management.</p>
           <form className="auth-form" onSubmit={handleSubmit}>
@@ -51,14 +51,14 @@ function AdminSignInContent() {
             <button className="auth-btn" type="submit">Continue</button>
           </form>
           {status === "loading" && <p style={{marginTop:8}}>Signing in...</p>}
-          {error && <p style={{marginTop:8,color:'red'}}>{error}</p>}
+          {error && <p style={{marginTop:8,color:'#dc2626'}}>{error}</p>}
           <div className="auth-alt">
             <Link href="/">Back to site</Link>
           </div>
         </div>
         <div className="auth-hero">
           <div className="auth-hero-inner">
-            <div className="auth-brand" style={{justifyContent:'center'}}><span className="logo">NB</span><div className="Tag">Nexbric</div></div>
+            <div className="auth-brand" style={{justifyContent:'center'}}><span className="logo">A</span><div className="Tag">Alpacross</div></div>
             <h2>Admin Console</h2>
             <p>Monitor stats, manage users, and ensure smooth operations.</p>
           </div>

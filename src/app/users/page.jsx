@@ -53,13 +53,13 @@ export default function UsersPage() {
               <option value={50}>50</option>
             </select>
           </div>
-          <div style={{fontSize:12,color:'#6b7280'}}>
+          <div style={{fontSize:12,color:'#a0aec0'}}>
             Page {pagination?.page ?? page}{pagination?.totalPages ? ` of ${pagination.totalPages}` : ""}
           </div>
         </div>
 
         {status === "loading" && <p>Loading users...</p>}
-        {error && <p style={{color:'red'}}>{error}</p>}
+        {error && <p style={{color:'#dc2626'}}>{error}</p>}
         <div style={{overflowX:'auto'}}>
           <table className="rl-table">
             <thead>
@@ -77,11 +77,11 @@ export default function UsersPage() {
               {users?.map?.((u) => {
                 const emailBadgeStyle = {
                   display:'inline-block',padding:'2px 8px',borderRadius:12,fontSize:12,
-                  backgroundColor: u.isEmailConfirmed ? '#DCFCE7' : '#FEF3C7', color: u.isEmailConfirmed ? '#166534' : '#92400E'
+                  backgroundColor: u.isEmailConfirmed ? '#16a34a' : '#eab308', color: '#ffffff'
                 };
                 const banBadgeStyle = {
                   display:'inline-block',padding:'2px 8px',borderRadius:12,fontSize:12,
-                  backgroundColor: u.isBanned ? '#FEE2E2' : '#DCFCE7', color: u.isBanned ? '#991B1B' : '#166534'
+                  backgroundColor: u.isBanned ? '#dc2626' : '#16a34a', color: '#ffffff'
                 };
                 return (
                   <tr key={u.id}>
@@ -100,7 +100,7 @@ export default function UsersPage() {
         </div>
 
         <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginTop:12,flexWrap:'wrap',gap:8}}>
-          <div style={{fontSize:12,color:'#6b7280'}}>
+          <div style={{fontSize:12,color:'#a0aec0'}}>
             Showing {users?.length || 0} items
           </div>
           <div style={{display:'flex',gap:8}}>

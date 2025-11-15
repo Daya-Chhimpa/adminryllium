@@ -18,8 +18,8 @@ export default function AdminAppShell({ children }) {
       <main className="rl-main">
         <div className="rl-mobilebar">
           <div className="rl-brand mini">
-            <div className="rl-logo">R</div>
-            <span className="rl-brand-text">Nexbric Admin</span>
+            <div className="rl-logo">A</div>
+            <span className="rl-brand-text">Alpacross Admin</span>
           </div>
           <button className="rl-hamburger" aria-label={open ? "Close menu" : "Open menu"} onClick={() => setOpen((v) => !v)}>
             {open ? <FaTimes /> : <FaBars />}
