@@ -1,23 +1,23 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
 
 :root {
-  /* Light Gray/Blue Theme - Fortario */
-  --bg: #f5f7fa;
+  /* Orange/White Theme - Unduct */
+  --bg: #fafafa;
   --bg-soft: #ffffff;
-  --text: #1a202c;
-  --muted: #718096;
+  --text: #1a1a1a;
+  --muted: #6b7280;
 
-  --primary: #4c6fff;      /* blue */
-  --primary-2: #6b8aff;    /* light blue */
-  --accent: #4c6fff;       /* blue accent */
+  --primary: #ff9500;      /* orange */
+  --primary-2: #ffb340;    /* light orange */
+  --accent: #ff9500;       /* orange accent */
 
-  --dark: #1a202c;
-  --gray-200: #e2e8f0;
-  --gray-300: #cbd5e0;
-  --gray-700: #718096;
+  --dark: #1a1a1a;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-700: #6b7280;
 
   --radius: 12px;
-  --shadow-1: 0 4px 12px rgba(76, 111, 255, 0.08);
+  --shadow-1: 0 4px 12px rgba(255, 149, 0, 0.08);
 }
 
 html,
@@ -220,10 +220,10 @@ a {
 /* Content */
 .rl-content { padding: 32px 6px 60px; }
 
-/* Hero styles (converted to blue gradient) */
+/* Hero styles (converted to orange gradient) */
 .hero-wrap {
-  background: linear-gradient(135deg, rgba(76,111,255,0.05), rgba(107,138,255,0.05)), #ffffff;
-  border: 1px solid rgba(76,111,255,0.15);
+  background: linear-gradient(135deg, rgba(255,149,0,0.03), rgba(255,179,64,0.03)), #ffffff;
+  border: 1px solid rgba(255,149,0,0.12);
   border-radius: 20px;
   padding: 34px 24px 28px;
   margin-bottom: 22px;
@@ -238,7 +238,7 @@ a {
   border: 1px solid var(--primary);
   border-radius: 30px;
   padding: 6px 14px;
-  background: rgba(76,111,255,0.05);
+  background: rgba(255,149,0,0.05);
   color: var(--primary);
 }
 
@@ -262,7 +262,7 @@ a {
 
 /* Feature Grid */
 .feature-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-top: 12px; }
-.feature-card { background: #ffffff; border: 1px solid rgba(76,111,255,0.15); border-radius: 12px; padding: 18px; box-shadow: var(--shadow-1); }
+.feature-card { background: #ffffff; border: 1px solid rgba(255,149,0,0.12); border-radius: 12px; padding: 18px; box-shadow: var(--shadow-1); }
 .feature-card h4 { margin: 6px 0 6px; font-size: 15px; }
 .feature-card p { color: var(--muted); font-size: 13px; }
 .feature-icon { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; color: #fff; background: linear-gradient(135deg, var(--primary), var(--primary-2)); margin: 0 auto 10px; }
@@ -305,7 +305,7 @@ a {
 }
 
 .rl-table thead {
-  background: rgba(76, 111, 255, 0.05);
+  background: rgba(255, 149, 0, 0.04);
 }
 
 .rl-table th {
@@ -323,7 +323,7 @@ a {
 }
 
 .rl-table tbody tr:hover {
-  background: rgba(76, 111, 255, 0.02);
+  background: rgba(255, 149, 0, 0.02);
 }
 
 .rl-table a {
