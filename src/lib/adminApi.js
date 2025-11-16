@@ -1,4 +1,4 @@
-const ADMIN_BASE_URL = process.env.NEXT_PUBLIC_ADMIN_API_BASE_URL || "https://backend-a-dev.nexbric.net";
+const ADMIN_BASE_URL = process.env.NEXT_PUBLIC_ADMIN_API_BASE_URL || "https://backend-a-dev.unduct.com";
 
 const ADMIN_AUTH_TOKEN_KEY = "adminAuthToken";
 
