@@ -14,9 +14,18 @@ function AdminSignInContent() {
 
   useEffect(() => {
     try {
+      // Check for either the specific admin token or a generic authToken
+      const adminToken = typeof window !== "undefined" ? window.localStorage.getItem("adminAuthToken") : "";
+      const authToken = typeof window !== "undefined" ? window.localStorage.getItem("authToken") : "";
+      
+      const hasToken = adminToken || authToken;
       const hasCookie = document.cookie.split("; ").some((c) => c.startsWith("admin_auth=1"));
-      const token = typeof window !== "undefined" ? window.localStorage.getItem("adminAuthToken") : "";
-      if (hasCookie && token) {
+
+      if (hasToken) {
+        if (!hasCookie) {
+          // Set the cookie so middleware allows access
+          document.cookie = `admin_auth=1; path=/; max-age=${60 * 60 * 24 * 7}`;
+        }
         const params = new URLSearchParams(typeof window !== "undefined" ? window.location.search : "");
         const next = params.get("next");
         router.replace(next || "/admin");
@@ -31,9 +40,13 @@ function AdminSignInContent() {
       email: form.get("email"),
       password: form.get("password"),
     };
-    const res = await dispatch(adminLoginThunk(payload));
-    if (res.meta.requestStatus === "fulfilled") {
-      router.push("/admin");
+    try {
+      const res = await dispatch(adminLoginThunk(payload));
+      if (res.meta.requestStatus === "fulfilled") {
+        router.push("/admin");
+      }
+    } catch (err) {
+      console.error("Login exception:", err);
     }
   }
 
@@ -42,9 +55,9 @@ function AdminSignInContent() {
       <link rel="stylesheet" href="/custom-style.css" />
       <div className="auth-wrap">
         <div className="auth-side">
-          <div className="auth-brand"><span className="logo">S</span><div className="Tag">Satorem</div></div>
-          <div className="auth-title">Admin Sign in</div>
-          <p className="auth-sub">Admin access for platform management.</p>
+          <div className="auth-brand"><span className="logo">PP</span><div className="Tag">PPrince</div></div>
+          <div className="auth-title">PPrince Admin</div>
+          <p className="auth-sub">Welcome back! Access your admin account.</p>
           <form className="auth-form" onSubmit={handleSubmit}>
             <input name="email" className="auth-input" type="email" placeholder="Email" required />
             <input name="password" className="auth-input" type="password" placeholder="Password" required />
@@ -53,14 +66,15 @@ function AdminSignInContent() {
           {status === "loading" && <p style={{marginTop:8}}>Signing in...</p>}
           {error && <p style={{marginTop:8,color:'#e53e3e'}}>{error}</p>}
           <div className="auth-alt">
-            <Link href="/">Back to site</Link>
+            <Link href="/">Forgot password?</Link>
+            <Link href="/">Create account</Link>
           </div>
         </div>
         <div className="auth-hero">
           <div className="auth-hero-inner">
-            <div className="auth-brand" style={{justifyContent:'center'}}><span className="logo">S</span><div className="Tag">Satorem</div></div>
-            <h2>Admin Console</h2>
-            <p>Monitor stats, manage users, and ensure smooth operations.</p>
+            <div className="auth-brand" style={{justifyContent:'center'}}><span className="logo">PP</span><div className="Tag">PPrince</div></div>
+            <h2>Trade smarter with PPrince</h2>
+            <p>Bank-grade security, lightning-fast execution, and powerful analytics in one modern platform.</p>
           </div>
         </div>
       </div>

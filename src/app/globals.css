@@ -1,23 +1,23 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
 
 :root {
-  /* Dark Purple/Blue Theme - Satorem */
-  --bg: #0a0b1e;
-  --bg-soft: #13152e;
-  --text: #ffffff;
-  --muted: #94a3b8;
+  /* PPrince Theme - Light/Black */
+  --bg: #ffffff;
+  --bg-soft: #f8fafc;
+  --text: #0f172a;
+  --muted: #64748b;
 
-  --primary: #8b5cf6;      /* purple */
-  --primary-2: #a78bfa;    /* light purple */
-  --accent: #7c3aed;       /* deep purple */
+  --primary: #000000;      /* Black */
+  --primary-2: #333333;    /* Dark Gray */
+  --accent: #000000;       /* Black */
 
-  --dark: #050614;
-  --gray-200: #1e293b;
-  --gray-300: #334155;
-  --gray-700: #64748b;
+  --dark: #e2e8f0;         /* Light Gray for inputs/selects backgrounds that were dark */
+  --gray-200: #e2e8f0;
+  --gray-300: #cbd5e1;
+  --gray-700: #94a3b8;
 
   --radius: 12px;
-  --shadow-1: 0 4px 20px rgba(139, 92, 246, 0.15);
+  --shadow-1: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
 html,
