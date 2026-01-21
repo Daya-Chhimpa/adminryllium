@@ -1,4 +1,5 @@
-const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://backend-dev.pprince.io";
+// const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://backend-dev.pprince.io";
+const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://430925a62bd5.ngrok-free.app";
 
 const AUTH_TOKEN_KEY = "authToken";
 

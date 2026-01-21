@@ -1,4 +1,4 @@
-const ADMIN_BASE_URL = process.env.NEXT_PUBLIC_ADMIN_API_BASE_URL || "https://backend-a-dev.nexbric.net";
+const ADMIN_BASE_URL = process.env.NEXT_PUBLIC_ADMIN_API_BASE_URL || "https://2fe8f1af8b6a.ngrok-free.app";
 
 const ADMIN_AUTH_TOKEN_KEY = "adminAuthToken";
 
@@ -63,12 +63,14 @@ export async function adminApiRequest(path, options = {}) {
 
 export const adminEndpoints = {
   health: () => "/health",
-  login: () => "/auth/login",
+  login: () => "/users/login",
   generalStats: () => "/general_stats",
-  users: (query = "") => `/users${query ? `?${query}` : ""}`,
-  userById: (id) => `/user/${encodeURIComponent(id)}`,
+  users: (query = "") => `/users`,
+  userById: (id) => `/users/${encodeURIComponent(id)}`,
   banUser: () => "/ban_user", // PUT { userId, isBanned, banReason }
   lockUser: () => "/lock_user", // PUT { userId, isLocked, lockDuration }
+  userBlockByAdmin: () => "/users/userblockbyadmin", // POST { userId }
+  userUnblockByAdmin: () => "/users/userunblockbyadmin", // POST { userId }
 };
 
 

@@ -1,9 +1,8 @@
 "use client";
-
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useSearchParams } from "next/navigation";
-import { adminGetUserThunk, adminBanUserThunk, adminLockUserThunk } from "@/store/slices/adminSlice";
+import { adminGetUserThunk, adminBlockUserThunk, adminUnblockUserThunk, adminLockUserThunk } from "@/store/slices/adminSlice";
 
 export default function UserDetailClient({ userId }) {
   const { id: routeId } = useParams();
@@ -14,8 +13,6 @@ export default function UserDetailClient({ userId }) {
   const error = useSelector((s) => s.admin.error);
   const user = useSelector((s) => s.admin.currentUser);
 
-  const [banReason, setBanReason] = useState("");
-  const [isBanned, setIsBanned] = useState(false);
   const [isLocked, setIsLocked] = useState(false);
   const [lockDuration, setLockDuration] = useState(0);
 
@@ -25,16 +22,23 @@ export default function UserDetailClient({ userId }) {
 
   useEffect(() => {
     if (user && String(user.id) === String(id)) {
-      setIsBanned(Boolean(user.isBanned));
       const lockedUntilTime = user?.lockedUntil ? new Date(user.lockedUntil).getTime() : 0;
       const isLockedNow = Boolean(user.isLocked) || (lockedUntilTime > Date.now());
       setIsLocked(isLockedNow);
     }
   }, [user, id]);
 
-  async function applyBan(e) {
-    e.preventDefault();
-    const res = await dispatch(adminBanUserThunk({ userId: id, isBanned, banReason: isBanned ? banReason : null }));
+  async function handleBlock() {
+    if (!confirm("Are you sure you want to block this user?")) return;
+    const res = await dispatch(adminBlockUserThunk({ userId: id }));
+    if (res.meta.requestStatus === "fulfilled") {
+      dispatch(adminGetUserThunk(id));
+    }
+  }
+
+  async function handleUnblock() {
+    if (!confirm("Are you sure you want to unblock this user?")) return;
+    const res = await dispatch(adminUnblockUserThunk({ userId: id }));
     if (res.meta.requestStatus === "fulfilled") {
       dispatch(adminGetUserThunk(id));
     }
@@ -73,18 +77,25 @@ export default function UserDetailClient({ userId }) {
               </ul>
             </div>
             <div>
-              <h3 style={{marginBottom:8}}>Ban/Unban</h3>
-              <form onSubmit={applyBan}>
-                <label style={{display:'block',marginBottom:8}}>
-                  <input type="checkbox" checked={isBanned} onChange={(e)=>setIsBanned(e.target.checked)} /> Banned
-                </label>
-                {isBanned && (
-                  <input className="auth-input" placeholder="Ban reason" value={banReason} onChange={(e)=>setBanReason(e.target.value)} />
-                )}
-                <button className="rl-btn rl-btn-primary" type="submit" disabled={status === "loading"} style={{marginTop:8}}>Apply</button>
-              </form>
+              <h3 style={{marginBottom:8}}>Actions</h3>
+              
+              <div style={{marginBottom: 24}}>
+                 <h4 style={{marginBottom:8, fontSize:'14px', color:'#555'}}>Block / Unblock</h4>
+                 <div style={{display:'flex', gap:10}}>
+                   {!user.is_block
+ ? (
+                     <button className="rl-btn rl-btn-danger" onClick={handleBlock} disabled={status === "loading"}>
+                       Block User
+                     </button>
+                   ) : (
+                     <button className="rl-btn rl-btn-success" onClick={handleUnblock} disabled={status === "loading"}>
+                       Unblock User
+                     </button>
+                   )}
+                 </div>
+              </div>
 
-              <h3 style={{marginBottom:8,marginTop:24}}>Lock/Unlock</h3>
+              {/* <h3 style={{marginBottom:8}}>Lock/Unlock</h3>
               <form onSubmit={applyLock}>
                 <label style={{display:'block',marginBottom:8}}>
                   <input type="checkbox" checked={isLocked} onChange={(e)=>setIsLocked(e.target.checked)} /> Locked
@@ -93,7 +104,7 @@ export default function UserDetailClient({ userId }) {
                   <input className="auth-input" type="number" min={0} placeholder="Lock duration (minutes)" value={lockDuration} onChange={(e)=>setLockDuration(e.target.value)} />
                 )}
                 <button className="rl-btn rl-btn-primary" type="submit" disabled={status === "loading"} style={{marginTop:8}}>Apply</button>
-              </form>
+              </form> */}
             </div>
           </div>
         )}
