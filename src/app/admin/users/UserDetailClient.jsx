@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useSearchParams } from "next/navigation";
-import { adminGetUserThunk, adminBanUserThunk, adminLockUserThunk } from "@/store/slices/adminSlice";
+import { adminGetUserThunk, adminBlockUserThunk, adminUnblockUserThunk } from "@/store/slices/adminSlice";
 
 export default function UserDetailClient({ userId }) {
   const { id: routeId } = useParams();
@@ -14,35 +14,31 @@ export default function UserDetailClient({ userId }) {
   const error = useSelector((s) => s.admin.error);
   const user = useSelector((s) => s.admin.currentUser);
 
-  const [banReason, setBanReason] = useState("");
-  const [isBanned, setIsBanned] = useState(false);
-  const [isLocked, setIsLocked] = useState(false);
-  const [lockDuration, setLockDuration] = useState(0);
-
+  // 1. Fetch User Data
   useEffect(() => {
     if (id) dispatch(adminGetUserThunk(id));
   }, [dispatch, id]);
 
-  useEffect(() => {
-    if (user && String(user.id) === String(id)) {
-      setIsBanned(Boolean(user.isBanned));
-      const lockedUntilTime = user?.lockedUntil ? new Date(user.lockedUntil).getTime() : 0;
-      const isLockedNow = Boolean(user.isLocked) || (lockedUntilTime > Date.now());
-      setIsLocked(isLockedNow);
-    }
-  }, [user, id]);
-
-  async function applyBan(e) {
-    e.preventDefault();
-    const res = await dispatch(adminBanUserThunk({ userId: id, isBanned, banReason: isBanned ? banReason : null }));
+  // 2. Button Handlers
+  async function handleBlock() {
+    if (!confirm("Are you sure you want to block this user?")) return;
+    
+    // Call API
+    const res = await dispatch(adminBlockUserThunk({ userId: id }));
+    
+    // Refresh Data on Success
     if (res.meta.requestStatus === "fulfilled") {
       dispatch(adminGetUserThunk(id));
     }
   }
 
-  async function applyLock(e) {
-    e.preventDefault();
-    const res = await dispatch(adminLockUserThunk({ userId: id, isLocked, lockDuration: Number(lockDuration) || 0 }));
+  async function handleUnblock() {
+    if (!confirm("Are you sure you want to unblock this user?")) return;
+    
+    // Call API
+    const res = await dispatch(adminUnblockUserThunk({ userId: id }));
+    
+    // Refresh Data on Success
     if (res.meta.requestStatus === "fulfilled") {
       dispatch(adminGetUserThunk(id));
     }
@@ -66,34 +62,35 @@ export default function UserDetailClient({ userId }) {
                 <li><strong>Created:</strong> {user.createdAt}</li>
                 <li><strong>Email Confirmed:</strong> {String(user.isEmailConfirmed)}</li>
                 <li><strong>2FA:</strong> {String(user.is2FaEnabled)}</li>
-                <li><strong>Banned:</strong> {String(user.isBanned)}</li>
+                <li><strong>Status:</strong> {user.is_block ? "Blocked" : "Active"}</li>
                 <li><strong>Last IP:</strong> {user.lastIp || "-"}</li>
                 <li><strong>Last Login:</strong> {user.lastLogin || "-"}</li>
-                <li><strong>Locked Until:</strong> {user.lockedUntil || "-"}</li>
               </ul>
             </div>
             <div>
-              <h3 style={{marginBottom:8}}>Ban/Unban</h3>
-              <form onSubmit={applyBan}>
-                <label style={{display:'block',marginBottom:8}}>
-                  <input type="checkbox" checked={isBanned} onChange={(e)=>setIsBanned(e.target.checked)} /> Banned
-                </label>
-                {isBanned && (
-                  <input className="auth-input" placeholder="Ban reason" value={banReason} onChange={(e)=>setBanReason(e.target.value)} />
-                )}
-                <button className="rl-btn rl-btn-primary" type="submit" disabled={status === "loading"} style={{marginTop:8}}>Apply</button>
-              </form>
-
-              <h3 style={{marginBottom:8,marginTop:24}}>Lock/Unlock</h3>
-              <form onSubmit={applyLock}>
-                <label style={{display:'block',marginBottom:8}}>
-                  <input type="checkbox" checked={isLocked} onChange={(e)=>setIsLocked(e.target.checked)} /> Locked
-                </label>
-                {isLocked && (
-                  <input className="auth-input" type="number" min={0} placeholder="Lock duration (minutes)" value={lockDuration} onChange={(e)=>setLockDuration(e.target.value)} />
-                )}
-                <button className="rl-btn rl-btn-primary" type="submit" disabled={status === "loading"} style={{marginTop:8}}>Apply</button>
-              </form>
+              <h3 style={{marginBottom:8}}>Block Management</h3>
+              
+              {!user.is_block ? (
+                // SHOW BLOCK BUTTON
+                <button 
+                  className="rl-btn rl-btn-primary" // Using theme class instead of generic btn-danger
+                  style={{backgroundColor: '#dc3545', borderColor: '#dc3545'}}
+                  onClick={handleBlock} 
+                  disabled={status === "loading"}
+                >
+                  Block User
+                </button>
+              ) : (
+                // SHOW UNBLOCK BUTTON
+                <button 
+                  className="rl-btn rl-btn-primary" // Using theme class
+                  style={{backgroundColor: '#28a745', borderColor: '#28a745'}}
+                  onClick={handleUnblock} 
+                  disabled={status === "loading"}
+                >
+                  Unblock User
+                </button>
+              )}
             </div>
           </div>
         )}

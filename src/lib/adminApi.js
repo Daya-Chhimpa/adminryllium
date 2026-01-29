@@ -62,13 +62,24 @@ export async function adminApiRequest(path, options = {}) {
 }
 
 export const adminEndpoints = {
+  // System
   health: () => "/health",
-  login: () => "/auth/login",
-  generalStats: () => "/general_stats",
-  users: (query = "") => `/users${query ? `?${query}` : ""}`,
-  userById: (id) => `/user/${encodeURIComponent(id)}`,
+  login: () => "/users/login", // POST { email, password }
+  
+  // Stats
+  generalStats: () => "/users/userstats", // POST
+  
+  // User Management
+  users: (query = "") => `/users${query ? "?" + query : ""}`, // POST (lists users)
+  userById: (id) => `/users/${encodeURIComponent(id)}`, // POST (get specific user)
+  
+  // Actions
   banUser: () => "/ban_user", // PUT { userId, isBanned, banReason }
   lockUser: () => "/lock_user", // PUT { userId, isLocked, lockDuration }
+  
+  // Block/Unblock Features (Priority)
+  userBlockByAdmin: () => "/users/userblockbyadmin", // POST { userId }
+  userUnblockByAdmin: () => "/users/userunblockbyadmin", // POST { userId }
 };
 
 

@@ -26,7 +26,7 @@ export const adminGeneralStatsThunk = createAsyncThunk(
   "admin/generalStats",
   async (_payload, { rejectWithValue }) => {
     try {
-      return await adminApiRequest(adminEndpoints.generalStats(), { method: "GET" });
+      return await adminApiRequest(adminEndpoints.generalStats(), { method: "POST" });
     } catch (e) {
       return rejectWithValue(e.message);
     }
@@ -37,7 +37,7 @@ export const adminListUsersThunk = createAsyncThunk(
   "admin/listUsers",
   async (query, { rejectWithValue }) => {
     try {
-      return await adminApiRequest(adminEndpoints.users(query), { method: "GET" });
+      return await adminApiRequest(adminEndpoints.users(query), { method: "POST" });
     } catch (e) {
       return rejectWithValue(e.message);
     }
@@ -48,7 +48,7 @@ export const adminGetUserThunk = createAsyncThunk(
   "admin/getUser",
   async (id, { rejectWithValue }) => {
     try {
-      return await adminApiRequest(adminEndpoints.userById(id), { method: "GET" });
+      return await adminApiRequest(adminEndpoints.userById(id), { method: "POST" });
     } catch (e) {
       return rejectWithValue(e.message);
     }
@@ -71,6 +71,29 @@ export const adminLockUserThunk = createAsyncThunk(
   async (payload, { rejectWithValue }) => {
     try {
       return await adminApiRequest(adminEndpoints.lockUser(), { method: "PUT", body: payload });
+    } catch (e) {
+      return rejectWithValue(e.message);
+    }
+  }
+);
+
+
+export const adminBlockUserThunk = createAsyncThunk(
+  "admin/blockUser",
+  async (payload, { rejectWithValue }) => {
+    try {
+      return await adminApiRequest(adminEndpoints.userBlockByAdmin(), { method: "POST", body: payload });
+    } catch (e) {
+      return rejectWithValue(e.message);
+    }
+  }
+);
+
+export const adminUnblockUserThunk = createAsyncThunk(
+  "admin/unblockUser",
+  async (payload, { rejectWithValue }) => {
+    try {
+      return await adminApiRequest(adminEndpoints.userUnblockByAdmin(), { method: "POST", body: payload });
     } catch (e) {
       return rejectWithValue(e.message);
     }
@@ -126,7 +149,15 @@ const adminSlice = createSlice({
 
       .addCase(adminLockUserThunk.pending, pending)
       .addCase(adminLockUserThunk.fulfilled, (state) => { state.status = "succeeded"; })
-      .addCase(adminLockUserThunk.rejected, rejected);
+      .addCase(adminLockUserThunk.rejected, rejected)
+
+      .addCase(adminBlockUserThunk.pending, pending)
+      .addCase(adminBlockUserThunk.fulfilled, (state) => { state.status = "succeeded"; })
+      .addCase(adminBlockUserThunk.rejected, rejected)
+
+      .addCase(adminUnblockUserThunk.pending, pending)
+      .addCase(adminUnblockUserThunk.fulfilled, (state) => { state.status = "succeeded"; })
+      .addCase(adminUnblockUserThunk.rejected, rejected);
   },
 });
 

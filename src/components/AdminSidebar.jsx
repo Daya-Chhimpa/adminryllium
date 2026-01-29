@@ -8,7 +8,7 @@ import { FaTachometerAlt, FaUsers, FaSignOutAlt } from "react-icons/fa";
 
 const NAV = [
   { href: "/admin", label: "Dashboard", icon: FaTachometerAlt },
-  { href: "/users", label: "Users", icon: FaUsers },
+  { href: "/admin/users", label: "Users", icon: FaUsers },
 ];
 
 export default function AdminSidebar({ drawerOpen = false, onClose }) {
@@ -29,7 +29,11 @@ export default function AdminSidebar({ drawerOpen = false, onClose }) {
       </div>
       <nav className="rl-nav">
         {NAV.map(({ href, label, icon: Icon }) => {
-          const isActive = href === "/" ? pathname === "/" : pathname?.startsWith(href);
+          // Exact match for 'Dashboard' (/admin), prefix match for others
+          const isActive = href === "/admin" 
+            ? pathname === "/admin" 
+            : pathname?.startsWith(href);
+
           return (
             <Link
               key={href}
