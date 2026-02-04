@@ -1,4 +1,4 @@
-const ADMIN_BASE_URL = process.env.NEXT_PUBLIC_ADMIN_API_BASE_URL || "https://backend-a-dev.unduct.com";
+const ADMIN_BASE_URL = process.env.NEXT_PUBLIC_ADMIN_API_BASE_URL || "https://api.pprince.io";
 
 const ADMIN_AUTH_TOKEN_KEY = "adminAuthToken";
 
@@ -63,10 +63,12 @@ export async function adminApiRequest(path, options = {}) {
 
 export const adminEndpoints = {
   health: () => "/health",
-  login: () => "/auth/login",
-  generalStats: () => "/general_stats",
+  login: () => "/users/login",
+  generalStats: () => "/users/userstats",
   users: (query = "") => `/users${query ? `?${query}` : ""}`,
-  userById: (id) => `/user/${encodeURIComponent(id)}`,
+  userById: (id) => `/users/${encodeURIComponent(id)}`,
+  blockUser: () => "/users/userblockbyadmin",
+  unblockUser: () => "/users/userunblockbyadmin",
   banUser: () => "/ban_user", // PUT { userId, isBanned, banReason }
   lockUser: () => "/lock_user", // PUT { userId, isLocked, lockDuration }
 };

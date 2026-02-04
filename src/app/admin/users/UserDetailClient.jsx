@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useSearchParams } from "next/navigation";
-import { adminGetUserThunk, adminBanUserThunk, adminLockUserThunk } from "@/store/slices/adminSlice";
+import { adminGetUserThunk, adminBanUserThunk, adminLockUserThunk, adminBlockUserThunk, adminUnblockUserThunk } from "@/store/slices/adminSlice";
 
 export default function UserDetailClient({ userId }) {
   const { id: routeId } = useParams();
@@ -18,6 +18,7 @@ export default function UserDetailClient({ userId }) {
   const [isBanned, setIsBanned] = useState(false);
   const [isLocked, setIsLocked] = useState(false);
   const [lockDuration, setLockDuration] = useState(0);
+  const [isBlocked, setIsBlocked] = useState(false);
 
   useEffect(() => {
     if (id) dispatch(adminGetUserThunk(id));
@@ -29,6 +30,7 @@ export default function UserDetailClient({ userId }) {
       const lockedUntilTime = user?.lockedUntil ? new Date(user.lockedUntil).getTime() : 0;
       const isLockedNow = Boolean(user.isLocked) || (lockedUntilTime > Date.now());
       setIsLocked(isLockedNow);
+      setIsBlocked(Boolean(user.isBlocked || user.is_block));
     }
   }, [user, id]);
 
@@ -45,6 +47,27 @@ export default function UserDetailClient({ userId }) {
     const res = await dispatch(adminLockUserThunk({ userId: id, isLocked, lockDuration: Number(lockDuration) || 0 }));
     if (res.meta.requestStatus === "fulfilled") {
       dispatch(adminGetUserThunk(id));
+    }
+  }
+
+  async function toggleBlock() {
+    // If currently blocked, we unblock. If not blocked, we block.
+    // However, guide says separate endpoints.
+    // Confirm via state.
+    // UI: Checkbox "Blocked"?
+  }
+
+  async function applyBlockState(e) {
+    e.preventDefault();
+    // If local state isBlocked is true, we call block endpoint.
+    // If false, we call unblock endpoint.
+    // Note: The guide has explicit endpoints for block and unblock.
+    if (isBlocked) {
+       const res = await dispatch(adminBlockUserThunk({ userId: id }));
+       if (res.meta.requestStatus === "fulfilled") dispatch(adminGetUserThunk(id));
+    } else {
+       const res = await dispatch(adminUnblockUserThunk({ userId: id }));
+       if (res.meta.requestStatus === "fulfilled") dispatch(adminGetUserThunk(id));
     }
   }
 
@@ -67,6 +90,7 @@ export default function UserDetailClient({ userId }) {
                 <li><strong>Email Confirmed:</strong> {String(user.isEmailConfirmed)}</li>
                 <li><strong>2FA:</strong> {String(user.is2FaEnabled)}</li>
                 <li><strong>Banned:</strong> {String(user.isBanned)}</li>
+                <li><strong>Blocked:</strong> {String(user.isBlocked || user.is_block || false)}</li>
                 <li><strong>Last IP:</strong> {user.lastIp || "-"}</li>
                 <li><strong>Last Login:</strong> {user.lastLogin || "-"}</li>
                 <li><strong>Locked Until:</strong> {user.lockedUntil || "-"}</li>
@@ -81,6 +105,17 @@ export default function UserDetailClient({ userId }) {
                 {isBanned && (
                   <input className="auth-input" placeholder="Ban reason" value={banReason} onChange={(e)=>setBanReason(e.target.value)} />
                 )}
+                <button className="rl-btn rl-btn-primary" type="submit" disabled={status === "loading"} style={{marginTop:8}}>Apply</button>
+              </form>
+
+              <h3 style={{marginBottom:8,marginTop:24}}>Block/Unblock</h3>
+              <form onSubmit={applyBlockState}>
+                <label style={{display:'block',marginBottom:8}}>
+                   <input type="checkbox" checked={isBlocked} onChange={(e)=>setIsBlocked(e.target.checked)} /> Blocked
+                </label>
+                <div style={{fontSize:'0.8em', color:'#666', marginBottom:8}}>
+                  Blocking prevents all access immediately.
+                </div>
                 <button className="rl-btn rl-btn-primary" type="submit" disabled={status === "loading"} style={{marginTop:8}}>Apply</button>
               </form>
 

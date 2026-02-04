@@ -26,7 +26,7 @@ export const adminGeneralStatsThunk = createAsyncThunk(
   "admin/generalStats",
   async (_payload, { rejectWithValue }) => {
     try {
-      return await adminApiRequest(adminEndpoints.generalStats(), { method: "GET" });
+      return await adminApiRequest(adminEndpoints.generalStats(), { method: "POST" });
     } catch (e) {
       return rejectWithValue(e.message);
     }
@@ -71,6 +71,30 @@ export const adminLockUserThunk = createAsyncThunk(
   async (payload, { rejectWithValue }) => {
     try {
       return await adminApiRequest(adminEndpoints.lockUser(), { method: "PUT", body: payload });
+    } catch (e) {
+      return rejectWithValue(e.message);
+    }
+  }
+);
+
+export const adminBlockUserThunk = createAsyncThunk(
+  "admin/blockUser",
+  async (payload, { rejectWithValue }) => {
+    try {
+      // payload: { userId }
+      return await adminApiRequest(adminEndpoints.blockUser(), { method: "POST", body: payload });
+    } catch (e) {
+      return rejectWithValue(e.message);
+    }
+  }
+);
+
+export const adminUnblockUserThunk = createAsyncThunk(
+  "admin/unblockUser",
+  async (payload, { rejectWithValue }) => {
+    try {
+      // payload: { userId }
+      return await adminApiRequest(adminEndpoints.unblockUser(), { method: "POST", body: payload });
     } catch (e) {
       return rejectWithValue(e.message);
     }
@@ -126,7 +150,15 @@ const adminSlice = createSlice({
 
       .addCase(adminLockUserThunk.pending, pending)
       .addCase(adminLockUserThunk.fulfilled, (state) => { state.status = "succeeded"; })
-      .addCase(adminLockUserThunk.rejected, rejected);
+      .addCase(adminLockUserThunk.rejected, rejected)
+
+      .addCase(adminBlockUserThunk.pending, pending)
+      .addCase(adminBlockUserThunk.fulfilled, (state) => { state.status = "succeeded"; })
+      .addCase(adminBlockUserThunk.rejected, rejected)
+
+      .addCase(adminUnblockUserThunk.pending, pending)
+      .addCase(adminUnblockUserThunk.fulfilled, (state) => { state.status = "succeeded"; })
+      .addCase(adminUnblockUserThunk.rejected, rejected);
   },
 });
 
