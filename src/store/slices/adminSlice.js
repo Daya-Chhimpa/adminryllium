@@ -15,7 +15,15 @@ export const adminLoginThunk = createAsyncThunk(
   "admin/login",
   async (payload, { rejectWithValue }) => {
     try {
-      return await adminApiRequest(adminEndpoints.login(), { method: "POST", body: payload });
+      const response = await adminApiRequest(adminEndpoints.login(), { method: "POST", body: payload });
+      const user = response?.user || response?.data?.user;
+      
+      // Strict check: Must be role 'admin'
+      if (user?.user_role !== "admin") {
+        return rejectWithValue("Access denied: Not an administrator.");
+      }
+      
+      return response;
     } catch (e) {
       return rejectWithValue(e.message);
     }
@@ -26,7 +34,7 @@ export const adminGeneralStatsThunk = createAsyncThunk(
   "admin/generalStats",
   async (_payload, { rejectWithValue }) => {
     try {
-      return await adminApiRequest(adminEndpoints.generalStats(), { method: "GET" });
+      return await adminApiRequest(adminEndpoints.generalStats(), { method: "POST" });
     } catch (e) {
       return rejectWithValue(e.message);
     }
@@ -55,16 +63,29 @@ export const adminGetUserThunk = createAsyncThunk(
   }
 );
 
-export const adminBanUserThunk = createAsyncThunk(
-  "admin/banUser",
+export const adminBlockUserThunk = createAsyncThunk(
+  "admin/blockUser",
   async (payload, { rejectWithValue }) => {
     try {
-      return await adminApiRequest(adminEndpoints.banUser(), { method: "PUT", body: payload });
+      return await adminApiRequest(adminEndpoints.blockUser(), { method: "POST", body: payload });
     } catch (e) {
       return rejectWithValue(e.message);
     }
   }
 );
+
+export const adminUnblockUserThunk = createAsyncThunk(
+  "admin/unblockUser",
+  async (payload, { rejectWithValue }) => {
+    try {
+      return await adminApiRequest(adminEndpoints.unblockUser(), { method: "POST", body: payload });
+    } catch (e) {
+      return rejectWithValue(e.message);
+    }
+  }
+);
+
+
 
 export const adminLockUserThunk = createAsyncThunk(
   "admin/lockUser",
@@ -97,8 +118,8 @@ const adminSlice = createSlice({
       .addCase(adminLoginThunk.pending, pending)
       .addCase(adminLoginThunk.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.admin = action.payload?.admin || { email: action.meta.arg?.email };
-        const token = action.payload?.token || action.payload?.accessToken || action.payload?.data?.token;
+        state.admin = action.payload?.admin || action.payload?.user || action.payload?.data?.user || { email: action.meta.arg?.email };
+        const token = action.payload?.token || action.payload?.accessToken || action.payload?.data?.token || action.payload?.data?.adminAuthToken;
         if (token) {
           if (typeof document !== "undefined") {
             document.cookie = `admin_auth=1; path=/; max-age=${60 * 60 * 24 * 7}`;
@@ -120,9 +141,13 @@ const adminSlice = createSlice({
       .addCase(adminGetUserThunk.fulfilled, (state, action) => { state.status = "succeeded"; state.currentUser = action.payload; })
       .addCase(adminGetUserThunk.rejected, rejected)
 
-      .addCase(adminBanUserThunk.pending, pending)
-      .addCase(adminBanUserThunk.fulfilled, (state) => { state.status = "succeeded"; })
-      .addCase(adminBanUserThunk.rejected, rejected)
+      .addCase(adminBlockUserThunk.pending, pending)
+      .addCase(adminBlockUserThunk.fulfilled, (state) => { state.status = "succeeded"; })
+      .addCase(adminBlockUserThunk.rejected, rejected)
+
+      .addCase(adminUnblockUserThunk.pending, pending)
+      .addCase(adminUnblockUserThunk.fulfilled, (state) => { state.status = "succeeded"; })
+      .addCase(adminUnblockUserThunk.rejected, rejected)
 
       .addCase(adminLockUserThunk.pending, pending)
       .addCase(adminLockUserThunk.fulfilled, (state) => { state.status = "succeeded"; })
